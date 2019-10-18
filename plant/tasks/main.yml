@@ -1,0 +1,40 @@
+---
+- name: Install required packages
+  apt:
+    name: "{{ required_packages }}"
+    update_cache: yes
+    state: present
+
+- name: Download file to remote location
+  get_url:
+    url: "{{ download_base_url }}"
+    dest: "{{ remote_file_location }}"
+    owner: root
+    group: root
+    mode: '0555'
+  when: download_file
+
+- name: Copy file to remote location
+  copy:
+    src: "{{ filename }}"
+    dest: "{{ remote_file_location }}"
+    owner: root
+    group: root
+    mode: '0555'
+  when: copy_file
+
+- name: Template and copy service file
+  template:
+    src: "{{ service_filename }}"
+    dest: "/etc/init.d/{{ service_name }}"
+    owner: root
+    group: root
+    mode: '0111'
+
+- name: Symlink to proper run level
+  file:
+    src: "/etc/init.d/{{ service_name }}"
+    dest: "/etc/rc{{ init_run_level }}.d/{{ init_run_prefix }}{{ service_name }}"
+    owner: root
+    group: root
+    state: link
