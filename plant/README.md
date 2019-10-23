@@ -1,22 +1,38 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+This role installs an Apfell payload as a script in a `rc` directory.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* An [Apfell](https://github.com/its-a-feature/Apfell) server
+* A compiled payload file in the `files` directory or link to the hosted file.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+```
+payload_type (viper) - Type of payload (viper, linfell, apfell-jxa)
+required_packages (python-minimal) - System packages that need to be installed for the payload to run. (Python2.7 for viper payloads)
+filename (viper.py) - Local payload filename
+copy_file (True) - Copy the payload from local machine to remote machine
+download_file (False) - Download the payload from a URL
+download_base_url (http://example.com:80/) - URL and directory path for payload. Followed by 'filename'.
+remote_file_location (/usr/lib/viper) - Full path to place payload
+service_filename (plant.service) - Local filename to copy for runlevel script
+service_name (viper) - Name of service to link in rc directory
+run_dir (/tmp/) - Directory to start process in
+run_cmd (/usr/bin/python) - Command to start process. Followed by 'remote_file_location'.
+run_user (root) - User to run process as
+init_run_level (2) - Run level to run as 
+init_run_prefix (S01) - File prefix for rc file
+```
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
@@ -25,7 +41,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: username.rolename, x: 42 }
+         - plant
 
 License
 -------
@@ -35,4 +51,4 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+github.com/becksteadn
